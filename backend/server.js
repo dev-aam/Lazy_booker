@@ -6,6 +6,8 @@ import { getCacheKey, getCachedResult, setCachedResult } from './cache.js';
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const INDIA_MIN_BUDGET = 500;
+const INDIA_MAX_BUDGET = 200000;
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +29,19 @@ const validateRequest = ({ location, checkin, checkout, minPrice, maxPrice, curr
 
   if (Number(minPrice) > Number(maxPrice)) {
     return 'minPrice must be less than or equal to maxPrice.';
+  }
+
+  if (Number(minPrice) < INDIA_MIN_BUDGET || Number(maxPrice) > INDIA_MAX_BUDGET) {
+    return `Budget must be between ${INDIA_MIN_BUDGET} and ${INDIA_MAX_BUDGET}.`;
+  }
+
+  if (currency !== 'INR') {
+    return 'Only INR currency is supported for India-focused search.';
+  }
+
+  const normalizedLocation = String(location).toLowerCase();
+  if (!normalizedLocation.includes('india')) {
+    return 'Location must be in India. Please include city/state and India.';
   }
 
   return null;

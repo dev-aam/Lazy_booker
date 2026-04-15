@@ -58,7 +58,7 @@ const fetchSerpHotels = async ({ location, checkin, checkout, currency, serpApiK
 
   const url = new URL(SERP_API_URL);
   url.searchParams.set('engine', 'google_hotels');
-  url.searchParams.set('q', `hotels in ${location}`);
+  url.searchParams.set('q', `hotels in ${location}, India`);
   url.searchParams.set('check_in_date', checkin);
   url.searchParams.set('check_out_date', checkout);
   url.searchParams.set('currency', currency);
@@ -79,7 +79,7 @@ const fetchSerpMaps = async ({ location, serpApiKey, currency }) => {
 
   const url = new URL(SERP_API_URL);
   url.searchParams.set('engine', 'google_maps');
-  url.searchParams.set('q', `hotels ${location}`);
+  url.searchParams.set('q', `hotels ${location}, India`);
   url.searchParams.set('type', 'search');
   url.searchParams.set('api_key', serpApiKey);
 
@@ -97,32 +97,33 @@ const fetchSerpMaps = async ({ location, serpApiKey, currency }) => {
 };
 
 const fallbackMockResults = ({ location, minPrice, maxPrice, currency }) => {
+  const cityLabel = location.replace(/,\s*india/i, '').trim();
   const base = [
     {
-      name: `${location} City Suites`,
+      name: `${cityLabel} City Suites`,
       stars: 4,
       reviewScore: 8.9,
       reviewCount: 1284,
       pricePerNight: Math.max(minPrice, Math.min(maxPrice, minPrice + 50)),
       currency,
-      address: `Downtown ${location}`,
+      address: `Downtown ${cityLabel}, India`,
       distanceFromCenter: '0.8 km from center',
       source: 'Hotels.com',
       url: 'https://www.hotels.com',
-      reviewSnippets: makeSnippet('Hotels.com', `${location} City Suites`, location)
+      reviewSnippets: makeSnippet('Hotels.com', `${cityLabel} City Suites`, cityLabel)
     },
     {
-      name: `${location} Grand Palace`,
+      name: `${cityLabel} Grand Palace`,
       stars: 5,
       reviewScore: 9.3,
       reviewCount: 987,
       pricePerNight: Math.max(minPrice, Math.min(maxPrice, minPrice + 120)),
       currency,
-      address: `Central Avenue, ${location}`,
+      address: `Central Avenue, ${cityLabel}, India`,
       distanceFromCenter: '0.4 km from center',
       source: 'TripAdvisor',
       url: 'https://www.tripadvisor.com',
-      reviewSnippets: makeSnippet('TripAdvisor', `${location} Grand Palace`, location)
+      reviewSnippets: makeSnippet('TripAdvisor', `${cityLabel} Grand Palace`, cityLabel)
     }
   ];
 

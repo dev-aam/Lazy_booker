@@ -1,4 +1,6 @@
 const API_URL = 'http://localhost:3000/api/search';
+const INDIA_BUDGET_MIN = 500;
+const INDIA_BUDGET_MAX = 200000;
 
 const state = {
   step: 1,
@@ -50,6 +52,7 @@ const toISODate = (date) => date.toISOString().split('T')[0];
 const today = toISODate(new Date());
 el.checkin.min = today;
 el.checkout.min = today;
+el.currency.value = 'INR';
 
 const nightsBetween = (start, end) => {
   const ms = new Date(end) - new Date(start);
@@ -79,7 +82,7 @@ const updateDateValidation = () => {
 };
 
 const currencySymbol = (currency) => {
-  const symbols = { USD: '$', EUR: '€', GBP: '£', INR: '₹', CAD: 'C$', JPY: '¥' };
+  const symbols = { INR: '₹' };
   return symbols[currency] ?? `${currency} `;
 };
 
@@ -108,9 +111,11 @@ const truncate = (text, max = 120) => (text.length <= max ? text : `${text.slice
 const fetchCitySuggestions = async (query) => {
   const url = new URL('https://nominatim.openstreetmap.org/search');
   url.searchParams.set('format', 'json');
-  url.searchParams.set('city', query);
+  url.searchParams.set('q', query);
   url.searchParams.set('limit', '5');
   url.searchParams.set('addressdetails', '1');
+  url.searchParams.set('countrycodes', 'in');
+  url.searchParams.set('featuretype', 'city');
 
   const response = await fetch(url.toString(), {
     headers: { 'Accept-Language': 'en' }
@@ -124,7 +129,9 @@ const renderSuggestions = (items) => {
   el.locationSuggestions.innerHTML = '';
   if (!items.length) return;
 
-  items.forEach((item) => {
+  items
+    .filter((item) => item.address?.country_code === 'in')
+    .forEach((item) => {
     const li = document.createElement('li');
     li.textContent = item.display_name;
     li.addEventListener('click', () => {
@@ -276,6 +283,11 @@ el.searchForm.addEventListener('submit', async (event) => {
     maxPrice: Number(el.maxPrice.value),
     currency: el.currency.value
   };
+
+  if (body.minPrice < INDIA_BUDGET_MIN || body.maxPrice > INDIA_BUDGET_MAX) {
+    alert(`Budget must be between ₹${INDIA_BUDGET_MIN} and ₹${INDIA_BUDGET_MAX} per night.`);
+    return;
+  }
 
   el.wizardCard.classList.add('hidden');
   el.resultsSection.classList.remove('hidden');
