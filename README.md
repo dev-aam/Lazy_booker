@@ -45,7 +45,11 @@ Lazy Booker is a lightweight single-page **India-focused** hotel search app with
 cp .env.example .env
 ```
 
+<<<<<<< HEAD
 Set `SERPAPI_KEY` in `.env` for live internet hotel data. Without it, the app falls back to demo Indian hotel records so the UI still works end-to-end.
+=======
+Set `SERPAPI_KEY` in `.env` for live internet hotel data. Without it, the app falls back to demo hotel records so the UI still works end-to-end.
+>>>>>>> main
 
 ### 2) Install backend dependencies
 
@@ -80,12 +84,21 @@ Request body:
 
 ```json
 {
+<<<<<<< HEAD
   "location": "Jaipur, Rajasthan, India",
   "checkin": "2026-05-10",
   "checkout": "2026-05-14",
   "minPrice": 2500,
   "maxPrice": 10000,
   "currency": "INR"
+=======
+  "location": "Barcelona, Spain",
+  "checkin": "2026-05-10",
+  "checkout": "2026-05-14",
+  "minPrice": 80,
+  "maxPrice": 250,
+  "currency": "EUR"
+>>>>>>> main
 }
 ```
 
@@ -100,9 +113,15 @@ Response:
       "stars": 4,
       "reviewScore": 8.9,
       "reviewCount": 1240,
+<<<<<<< HEAD
       "pricePerNight": 4800,
       "currency": "INR",
       "address": "MI Road, Jaipur, India",
+=======
+      "pricePerNight": 180,
+      "currency": "EUR",
+      "address": "Downtown",
+>>>>>>> main
       "distanceFromCenter": "0.8 km from center",
       "image": "https://...",
       "url": "https://...",
@@ -116,6 +135,9 @@ Response:
 ## Notes
 
 - API keys are only used on the backend (never exposed in browser code).
+<<<<<<< HEAD
 - API enforces Indian location inputs, INR currency, and budget limits of ₹500–₹200000.
+=======
+>>>>>>> main
 - CORS is enabled for local development.
 - Hotel images use lazy loading (`loading="lazy"`) for faster page render.
